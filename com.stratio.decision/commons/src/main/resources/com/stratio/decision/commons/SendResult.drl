@@ -1,0 +1,22 @@
+package com.stratio.decision.commons;
+
+import org.drools.core.spi.KnowledgeHelper;
+
+function void sendResult(KnowledgeHelper drools, Object data){
+
+    Result res = new Result(data); 
+    drools.insert(res);
+  
+}
+
+
+query "result" 
+    res : Result( )
+end
+
+
+/*
+query "result"
+    res : PocData( )
+end    
+*/

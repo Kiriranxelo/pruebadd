@@ -1,0 +1,52 @@
+package com.stratio.decision.demo_orders;
+
+import java.util.Map;
+import java.util.UUID;
+import com.stratio.decision.commons.Result;
+import com.stratio.decision.commons.WriteResult;
+
+rule "diferentCenter"
+	when
+    	$fdata: Map( this["ftype"] == "DIFERENT CENTER", this["client_id"] == "10")
+    then
+		Action action = new Action();
+		action.setId(UUID.randomUUID().toString());
+		action.setTypeFraud((String)$fdata.get("ftype"));
+		action.setAction("CANCEL CARD");
+		action.setIdCliente((Integer)$fdata.get("client_id"));
+
+       insert(action);
+       //WriteResult.sendResult(drools, action);
+        
+end
+
+rule "diferentPayment"
+	when
+    	$fdata: Map( this["ftype"] == "DIFERENT PAYMENT", this["client_id"] == "10" )
+	then
+		Action action = new Action();
+		action.setId(UUID.randomUUID().toString());
+		action.setTypeFraud((String)$fdata.get("ftype"));
+		action.setAction("CANCEL CARD");
+		action.setIdCliente((Integer)$fdata.get("client_id"));
+		
+		Action action2 = new Action();
+		action2.setId(UUID.randomUUID().toString());
+		action2.setTypeFraud((String)$fdata.get("ftype"));
+		action2.setAction("CANCEL ONLINE PURCHASE");
+		action2.setIdCliente((Integer)$fdata.get("client_id"));
+
+        insert(action);
+        insert(action2);
+        //WriteResult.sendResult(drools, action);
+        //WriteResult.sendResult(drools, action2);
+        
+end
+
+rule "writeAction"
+    salience -1
+	when
+	    $act: Action()
+	then
+	    WriteResult.sendResult(drools, $act);
+end

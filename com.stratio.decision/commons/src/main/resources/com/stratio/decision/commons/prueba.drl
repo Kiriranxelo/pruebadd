@@ -1,0 +1,34 @@
+package com.stratio.decision.commons;
+import java.util.Map;
+
+/*
+rule "test"
+when 
+    $inMap: Map()
+    Map.Entry( $k: key, $v: value ) from $inMap.entrySet()
+then
+    String data = $k + "=" + $v.toString();
+    Result res = new Result(data);
+    insert(res);
+end
+*/
+
+function Integer parseInteger(Object data){
+    return Integer.parseInt(data.toString()) ;
+ 
+}
+
+
+rule "test2"
+when 
+     $inMap: Map( this["col1"] != null )
+ then
+    PocData pd = new PocData();
+   // pd.setFieldInteger( Integer.parseInt( $inMap.get("col1").toString()) );
+    pd.setFieldInteger(parseInteger($inMap.get("col1")));
+    pd.setFieldString ("Drools result for: " + $inMap.get("col2").toString() );
+    
+    Result res = new Result($inMap.get("col1").toString());
+    insert(res);
+    
+end
